@@ -6,6 +6,11 @@ interface Props {
   resetHighlights: () => void;
   toggleDocument: () => void;
   setScale: (scaleValue: string) => void;
+  setSearchValue: (searchValue: string) => void;
+  currentMatch: number;
+  totalMatchCount: number;
+  findNext: () => void;
+  findPrev: () => void;
 }
 
 const updateHash = (highlight: IHighlight) => {
@@ -17,6 +22,11 @@ export function Sidebar({
   toggleDocument,
   resetHighlights,
   setScale,
+  setSearchValue,
+  currentMatch,
+  totalMatchCount,
+  findNext,
+  findPrev,
 }: Props) {
   return (
     <div className="sidebar" style={{ width: "25vw" }}>
@@ -40,6 +50,13 @@ export function Sidebar({
         {["page-width", "1", "2", "3"].map((scaleValue) => (
           <button onClick={() => setScale(scaleValue)}>{scaleValue}</button>
         ))}
+        <h3 style={{ marginBottom: "1rem" }}>Search:</h3>
+        <input type="text" onChange={(e) => setSearchValue(e.target.value)} />
+        <div>
+          <button onClick={findPrev}>{"<"}</button>
+          <button>{`${currentMatch}/${totalMatchCount}`}</button>
+          <button onClick={findNext}>{">"}</button>
+        </div>
       </div>
 
       <ul className="sidebar__highlights">

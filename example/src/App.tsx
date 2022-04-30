@@ -23,6 +23,9 @@ interface State {
   url: string;
   scaleValue: string;
   highlights: Array<IHighlight>;
+  currentMatch: number;
+  totalMatchCount: number;
+  searchValue: string;
 }
 
 const getNextId = () => String(Math.random()).slice(2);
@@ -54,11 +57,14 @@ const initialUrl = searchParams.get("url") || PRIMARY_PDF_URL;
 
 class App extends Component<{}, State> {
   state = {
+    searchValue: "",
     url: initialUrl,
     highlights: testHighlights[initialUrl]
       ? [...testHighlights[initialUrl]]
       : [],
     scaleValue: "page-width",
+    currentMatch: 0,
+    totalMatchCount: 0,
   };
 
   resetHighlights = () => {
@@ -77,7 +83,11 @@ class App extends Component<{}, State> {
     });
   };
 
-  scrollViewerTo = (highlight: any) => {};
+  scrollViewerTo = (highlight: any) => { };
+
+  findNext = () => { };
+
+  findPrev = () => { };
 
   scrollToHighlightFromHash = () => {
     const highlight = this.getHighlightById(parseIdFromHash());
@@ -124,18 +134,19 @@ class App extends Component<{}, State> {
         } = h;
         return id === highlightId
           ? {
-              id,
-              position: { ...originalPosition, ...position },
-              content: { ...originalContent, ...content },
-              ...rest,
-            }
+            id,
+            position: { ...originalPosition, ...position },
+            content: { ...originalContent, ...content },
+            ...rest,
+          }
           : h;
       }),
     });
   }
 
   render() {
-    const { url, highlights, scaleValue } = this.state;
+    const { url, highlights, scaleValue, searchValue, currentMatch, totalMatchCount } =
+      this.state;
 
     return (
       <div className="App" style={{ display: "flex", height: "100vh" }}>
@@ -146,6 +157,11 @@ class App extends Component<{}, State> {
           setScale={(newScaleValue) =>
             this.setState({ scaleValue: newScaleValue })
           }
+          setSearchValue={(searchValue) => this.setState({ searchValue })}
+          currentMatch={currentMatch}
+          totalMatchCount={totalMatchCount}
+          findNext={this.findNext}
+          findPrev={this.findPrev}
         />
         <div
           style={{
@@ -157,6 +173,14 @@ class App extends Component<{}, State> {
           <PdfLoader url={url} beforeLoad={<Spinner />}>
             {(pdfDocument) => (
               <PdfHighlighter
+                searchValue={searchValue}
+                onSearch={(currentMatch, totalMatchCount) => {
+                  this.setState({ currentMatch, totalMatchCount });
+                }}
+                findRefs={(findPrev, findNext) => {
+                  this.findPrev = findPrev;
+                  this.findNext = findNext;
+                }}
                 pdfDocument={pdfDocument}
                 enableAreaSelection={(event) => event.altKey}
                 onScrollChange={resetHash}
