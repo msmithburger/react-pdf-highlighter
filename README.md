@@ -1,4 +1,4 @@
-☕️ [Donate a Dollah](https://www.paypal.com/donate/?business=TNG2V3VUDVFRG&amount=1&no_recurring=1&item_name=Code+is+love.+Code+is+life.&currency_code=USD)
+💸 [Donate a Dollah](https://www.paypal.com/donate/?business=TNG2V3VUDVFRG&amount=1&no_recurring=1&item_name=Code+is+love.+Code+is+life.&currency_code=USD)
 
 ## react-pdf-highlighter
 
