@@ -82,6 +82,7 @@ interface Props<T_HT> {
   pdfScaleValue: string;
   pagesRotation: number;
   searchValue: string;
+  initialPageNumber?: number;
   onSearch: (currentMatch: number, totalMatchCount: number) => void;
   onSelectionFinished: (
     position: ScaledPosition,
@@ -102,6 +103,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     pdfScaleValue: "auto",
     pagesRotation: 0,
     searchValue: "",
+    initialPageNumber: 1,
     onSearch: () => {},
   };
 
@@ -256,6 +258,15 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
       highlightAll: true,
       findPrevious: true,
     });
+  };
+
+  setCurrentPage = (index: number = -1) => {
+    try {
+      console.log(`ATTEMPTING TO SET PAGE TO ${index}`);
+      this.viewer.currentPageNumber = index;
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   componentWillUnmount() {
@@ -510,7 +521,24 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   };
 
   onTextLayerRendered = () => {
+    const { initialPageNumber, searchValue } = this.props;
+
     this.renderHighlights();
+
+    setTimeout(() => {
+      if (initialPageNumber) {
+        this.setCurrentPage(initialPageNumber);
+      }
+
+      // If there is an initial search value
+      if (searchValue) {
+        this.viewer.findController.executeCommand("find", {
+          query: searchValue,
+          highlightAll: true,
+          phraseSearch: true,
+        });
+      }
+    }, 0);
   };
 
   scrollTo = (highlight: IHighlight) => {

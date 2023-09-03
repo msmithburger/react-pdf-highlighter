@@ -1,8 +1,8 @@
 {
-  "name": "@darian-lp/react-pdf-highlighter",
-  "version": "1.0.0",
-  "description": "react-pdf-highlighter but with more features",
-  "author": "Darian L-P and Artem Tyurin <artem.tyurin@gmail.com>",
+  "name": "@msmithburger/react-pdf-highlighter",
+  "version": "1.0.20",
+  "description": "react-pdf-highlighter fork of fork",
+  "author": "Matt Smithburger <smithburger.matthew@gmail.com>",
   "license": "MIT",
   "keywords": [
     "pdf",
