@@ -262,7 +262,6 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
   setCurrentPage = (index: number = -1) => {
     try {
-      console.log(`ATTEMPTING TO SET PAGE TO ${index}`);
       this.viewer.currentPageNumber = index;
     } catch (e) {
       console.error(e);
@@ -521,24 +520,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   };
 
   onTextLayerRendered = () => {
-    const { initialPageNumber, searchValue } = this.props;
-
     this.renderHighlights();
-
-    setTimeout(() => {
-      if (initialPageNumber) {
-        this.setCurrentPage(initialPageNumber);
-      }
-
-      // If there is an initial search value
-      if (searchValue) {
-        this.viewer.findController.executeCommand("find", {
-          query: searchValue,
-          highlightAll: true,
-          phraseSearch: true,
-        });
-      }
-    }, 0);
   };
 
   scrollTo = (highlight: IHighlight) => {
@@ -578,12 +560,27 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   };
 
   onDocumentReady = () => {
-    const { scrollRef, findRefs } = this.props;
+    const { initialPageNumber, searchValue, scrollRef, findRefs } = this.props;
 
     this.handleScaleValue();
 
     scrollRef(this.scrollTo);
     findRefs(this.goToPreviousMatch, this.goToNextMatch);
+
+    setTimeout(() => {
+      if (initialPageNumber) {
+        this.setCurrentPage(initialPageNumber);
+      }
+
+      // If there is an initial search value
+      if (searchValue) {
+        this.viewer.findController.executeCommand("find", {
+          query: searchValue,
+          highlightAll: true,
+          phraseSearch: true,
+        });
+      }
+    }, 0);
   };
 
   onSelectionChange = () => {
